@@ -1,0 +1,24 @@
+<h1>Skate Park</h1>
+
+<div class="py-5">
+    <h2>Iniciar Sesión</h2>
+    <hr class="w-50" />
+
+    <div id="alerta" class="alert alert-danger d-none" role="alert">
+        Por favor, completa todos los campos requeridos.
+    </div>
+    <form action="/user" id="formLogin" method="post">
+        <div class="form-group">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control w-50 m-auto" name="email" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control w-50 m-auto" name="password" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mb-3">Ingresar</button>
+        <p>¿Aún no tienes cuenta? <a href="/registrar">Regístrate</a></p>
+    </form>
+</div>
