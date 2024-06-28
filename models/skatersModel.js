@@ -2,25 +2,29 @@ import { pool } from "../data/conecction.js";
 
 export const getSkaters = async () => {
     const query = `
-    SELECT * FROM skaters
+    SELECT id,email,nombre,anos_experiencia,especialidad,foto,estado,role_id FROM skaters
   `;
 
     const result = await pool.query(query);
     return result.rows;
 }
 
-export const createSkater = async ({ email, nombre, password, experiencia, especialidad, dir_foto, estado }) => {
-    const query = {
-        text: `
-         INSERT INTO skaters (email,nombre,password,anos_experiencia,especialidad,foto,estado)
-         VALUES ($1,$2,$3,$4,$5,$6,$7)
-         returning email,nombre,anos_experiencia,especialidad,foto,estado
+export const createSkater = async ({ email, nombre, password, experiencia, especialidad, dir_foto, estado, role_id }) => {
+    try {
+        const query = {
+            text: `
+         INSERT INTO skaters (email,nombre,password,anos_experiencia,especialidad,foto,estado,role_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+         returning email,nombre,anos_experiencia,especialidad,foto,estado,role_id
          `,
-        values: [email, nombre, password, experiencia, especialidad, dir_foto, estado]
-    }
+            values: [email, nombre, password, experiencia, especialidad, dir_foto, estado, role_id]
+        }
 
-    const { rows } = await pool.query(query)
-    return rows
+        const { rows } = await pool.query(query)
+        return rows
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export const updateSkater = async ({ email, nombre, password, experiencia, especialidad }) => {
@@ -29,13 +33,14 @@ export const updateSkater = async ({ email, nombre, password, experiencia, espec
         UPDATE skaters
         SET nombre = $2, password = $3, anos_experiencia = $4, especialidad = $5
         WHERE email = $1
+        RETURNING *
         `,
         values: [email, nombre, password, experiencia, especialidad]
-    }
+    };
 
-    const { rows } = await pool.query(query)
-    return rows
-}
+    const { rows } = await pool.query(query);
+    return rows[0]; // Devolver el skater actualizado
+};
 
 export const findOneByEmail = async (email) => {
     const query = {
@@ -75,11 +80,39 @@ export const deleteUser = async (email) => {
     return rows[0]
 }
 
+export const getAllSkaters = async () => {
+    const query = `
+    SELECT id, email, nombre, anos_experiencia, especialidad, foto, estado, role_id 
+    FROM skaters 
+    WHERE role_id > 1;
+  `;
+
+    const result = await pool.query(query);
+    return result.rows;
+}
+export const updateEstado = async ({ id, estado }) => {
+
+    const query = {
+        text: `
+        UPDATE skaters
+        SET estado = $2
+        WHERE id = $1
+        `,
+        values: [id, estado]
+    }
+
+    const { rows } = await pool.query(query)
+    return rows
+
+}
+
 export const skaterModel = {
     getSkaters,
     createSkater,
     findOneByEmail,
     getUserById,
     updateSkater,
-    deleteUser
+    deleteUser,
+    getAllSkaters,
+    updateEstado
 }

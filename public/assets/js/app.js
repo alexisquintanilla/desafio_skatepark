@@ -1,21 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // alerta sino llenas el formulario
+    // Alerta si no llenas el formulario de login
+    const handleLoginForm = () => {
+        const formLogin = document.getElementById('formLogin');
+        if (formLogin) {
+            formLogin.addEventListener('submit', (e) => {
+                const email = document.querySelector('input[name="email"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+                const alerta = document.getElementById('alerta');
 
-    document.getElementById('formLogin').addEventListener('submit', (e) => {
-        const email = document.querySelector('input[name="email"]').value;
-        const password = document.querySelector('input[name="password"]').value;
-        if (!email.trim() || !password.trim()) {
-            e.preventDefault();
-            alerta.classList.remove('d-none');
-        } else {
-            alerta.classList.add('d-none');
+                if (!email.trim() || !password.trim()) {
+                    e.preventDefault();
+                    if (alerta) {
+                        alerta.classList.remove('d-none');
+                    }
+                } else {
+                    if (alerta) {
+                        alerta.classList.add('d-none');
+                    }
+                }
+            });
         }
-    });
+    }
 
-
-
-    // script para cargar las imagenes de los skaters
+    // Script para cargar las imágenes de los skaters
     const imgSkaters = () => {
         document.querySelectorAll('tr[data-id]').forEach(tr => {
             const id = tr.getAttribute('data-id');
@@ -31,10 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.head.appendChild(nthChildStyle);
         });
     }
-    imgSkaters()
 
-    // script para actualizar los datos del skater
-
+    // Script para actualizar los datos del skater
     const actualizarSkater = () => {
         const btnPrimary = document.querySelector('.btn-primary');
         if (btnPrimary) {
@@ -65,9 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    actualizarSkater()
 
-    // script para eliminar la cuenta del skater
+    // Script para eliminar la cuenta del skater
     const deleteSkater = () => {
         const btnDanger = document.querySelector('.btn-danger');
         if (btnDanger) {
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 try {
                     const email = document.querySelector('input[name="email"]').value;
-                    await axios.delete(`/delete?email=` + email);
+                    await axios.delete(`/delete?email=${email}`);
                     alert('Cuenta eliminada correctamente');
                     window.location.href = '/';
                 } catch (error) {
@@ -85,18 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    deleteSkater()
 
+    // Script para manejar el formulario de registro
     const formListen = () => {
         const formRegistro = document.getElementById('formRegistro');
         if (formRegistro) {
             formRegistro.addEventListener('submit', async () => {
-
                 try {
                     alert(`
-                        Usuario registrado correctamente
-                        
+                        Usuario registrado correctamente                        
                         Ahora puedes loguearte`);
+                    window.location.href = '/';
 
                 } catch (error) {
                     console.error(error);
@@ -106,8 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-
-
-
+    // Llamar a todas las funciones necesarias
+    handleLoginForm();
+    imgSkaters();
+    actualizarSkater();
+    deleteSkater();
+    formListen();
 });

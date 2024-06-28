@@ -27,3 +27,11 @@ td div {
 input {
     text-align: center;
 }
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

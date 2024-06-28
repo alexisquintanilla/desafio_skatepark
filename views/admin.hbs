@@ -16,9 +16,9 @@
                 <th scope="col">Estado</th>
             </tr>
         </thead>
-        <tbody>
-            {{#each skater}}
-            <tr data-id="{{id}}" data-nombre="{{nombre}}">
+        <tbody id="resultado">
+            {{#each skaters}}
+            <tr data-id="{{skaters.id}}" data-nombre="{{nombre}}">
                 <th scope="row">{{id}}</th>
                 <td>
                     <div></div>
@@ -27,7 +27,9 @@
                 <td>{{email}}</td>
                 <td>{{anos_experiencia}}</td>
                 <td>{{especialidad}}</td>
-                <td><input type="checkbox" checked /></td>
+                <td>
+                    <input type="checkbox" data-id="{{id}}" {{#if estado}}checked{{/if}} />
+                </td>
             </tr>
             {{/each}}
 
@@ -37,5 +39,66 @@
 
 <div>
     <hr>
-    <a href="/">Salir</a>
+    <a href="/" id="logout-link">Salir</a>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (!token) {
+        window.location.href = '/login';
+    }
+
+    axios.get('/datosUser', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(({ data }) => {
+            console.log(data);
+
+        })
+        .catch(e => console.log(e))
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                const checkbox = event.target;
+                const skaterId = checkbox.getAttribute('data-id');
+                const newState = checkbox.checked;
+
+                axios.post('/estado', {
+                    id: skaterId,
+                    estado: newState
+                })
+                    .then(response => {
+                        console.log('Estado actualizado:', response.data);
+
+                    })
+                    .catch(error => {
+                        console.error('Error actualizando estado:', error);
+                    });
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const logoutLink = document.getElementById('logout-link');
+
+        logoutLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Evita que el navegador siga el enlace inmediatamente
+
+            // Elimina el token del localStorage
+            localStorage.removeItem('token');
+
+            window.location.href = '/'
+        });
+    });
+</script>

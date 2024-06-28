@@ -14,38 +14,27 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
+        {{#each skaters}}
+        <tr data-id="{{skaters.id}}" data-nombre="{{nombre}}">
+            <th scope="row">{{id}}</th>
             <td>
                 <div></div>
             </td>
-            <td>Tony Hawk</td>
-            <td>12</td>
-            <td>Kickflip</td>
-            <td class="text-success font-weight-bold">Aprobado</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
+            <td>{{nombre}}</td>
+            <td>{{anos_experiencia}}</td>
+            <td>{{especialidad}}</td>
             <td>
-                <div></div>
+                {{#if estado}}
+                <span class="text-success font-weight-bold">Aprobado</span>
+                {{else}}
+                <span class="text-warning font-weight-bold">En revisión</span>
+                {{/if}}
             </td>
-            <td>Evelien Bouilliart</td>
-            <td>10</td>
-            <td>Heelflip</td>
-            <td class="text-success font-weight-bold">Aprobado</td>
         </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>
-                <div></div>
-            </td>
-            <td>Danny Way</td>
-            <td>8</td>
-            <td>Ollie</td>
-            <td class="text-warning font-weight-bold">En revisión</td>
-        </tr>
+        {{/each}}
+
     </tbody>
 </table>
-<a href="/">Iniciar Sesión</a> |
+<a href="/login">Iniciar Sesión</a> |
 <a href="/registrar">Registrarme</a>
 </div>
